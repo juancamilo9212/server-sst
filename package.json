@@ -1,0 +1,21 @@
+{
+  "name": "server-sst",
+  "version": "1.0.0",
+  "description": "Este es el backend para el proyecto sst",
+  "main": "index.js",
+  "author": "Juan Camilo Camargo",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt-nodejs": "^0.0.3",
+    "body-parser": "^1.19.0",
+    "connect-multiparty": "^2.2.0",
+    "express": "^4.17.1",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.29.1",
+    "mongoose": "^5.10.9",
+    "nodemon": "^2.0.6"
+  },
+  "scripts": {
+    "start": "nodemon index.js"
+  }
+}
