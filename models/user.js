@@ -9,7 +9,11 @@ const UserSchema=Schema({
         unique:true
     },
     password:String,
-    active:Boolean
+    active:Boolean,
+    accidents:[{
+            type: Schema.Types.ObjectId,
+            ref: 'Accident' 
+    }]
 })
 
 module.exports = mongoose.model("User",UserSchema);
