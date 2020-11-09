@@ -5,6 +5,7 @@ const AccidentSchema = Schema({
     name: String,
     lastName: String,
     idNumber:String,
+    company:String,
     eventDate:Date,
     arrivalDate:Date,
     area:String,
