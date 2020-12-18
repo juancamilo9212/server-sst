@@ -13,6 +13,10 @@ const UserSchema=Schema({
     accidents:[{
             type: Schema.Types.ObjectId,
             ref: 'Accident' 
+    }],
+    extintors:[{
+        type: Schema.Types.ObjectId,
+            ref: 'Extintor'
     }]
 })
 

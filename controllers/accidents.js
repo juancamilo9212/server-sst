@@ -1,5 +1,10 @@
 const Accident= require('../models/accidents');
 const User=require('../models/user');
+const fs = require("fs");
+const path = require("path");
+const accidentLib= require('../lib/accidents/index');
+var mime = require('mime');
+
 
 async function addAccident(req,res){
 
@@ -26,18 +31,35 @@ await user.save((err,userStored) => {
 }
 
 async function getAccidents(req,res){
-await User.findOne({_id:req.params})
-.populate('accidents').exec((err,userStored) => {
-    if(err){
-        res.status(500).send("Error del servidor");
-    }else{
-        if(!userStored){
-            res.status(404).send("Los accidentes no han sido encontrados");
+    const {filter,value} = req.query;
+    
+    await User.findOne({_id:req.params})
+    .populate('accidents').exec((err,userStored) => {
+        if(err){
+            res.status(500).send("Error del servidor");
         }else{
-            res.status(200).send(userStored.accidents);
+            if(!userStored){
+                res.status(404).send("Los accidentes no han sido encontrados");
+            }else{
+                if(!filter && !value){
+                    res.status(200).send({
+                        count:userStored.accidents.length,
+                        accidents:userStored.accidents});
+                }else{
+                    const {accidents}=userStored;
+                    let accidentsFiltered=
+                    accidentLib.filterAccident(accidents,filter,value);
+                    res.status(200).send(
+                        {count:accidentsFiltered.length,
+                        accidents:accidentsFiltered});
+                }
+            }
         }
-    }
-});
+    });
+    
+    
+
+
 }
 
 async function updateAccident(req,res){
@@ -50,7 +72,8 @@ await Accident.findByIdAndUpdate(id,updateData,(err,updatedAccident) => {
         if(!updatedAccident){
             res.status(404).send("El accidente no ha sido encontrado");
         }else{
-            res.status(200).send("El usuario ha sido actualizado correctamente");
+            res.status(200)
+            .send({code:200,accident:updatedAccident});
         }
     }
 }) 
@@ -96,9 +119,53 @@ await Accident.findByIdAndRemove(accidentId, (err,accidentRemoved) =>{
 
 }
 
+function uploadEventFiles(req,res){
+    try {
+    const {eventFiles} = req.files;
+    const eventArray=eventFiles?accidentLib.getFilesName(eventFiles):[];
+    res.status(200).send({code:200,images:eventArray});
+    } catch (error) {
+        res.status(500)
+        .send({message:"No se han podido cargar los archivos"})
+    }
+    
+}
+
+function  getEventFiles(req,res){
+const {eventFileName}=req.params;
+const filePath=`./uploads/event/${eventFileName}`;
+var mimetype = mime.getType(filePath);
+fs.exists(filePath,exists => {
+    if(!exists){
+        res.status(404).send({message:"Archivo no encontrado"})
+    }else{
+        res.setHeader('Content-disposition', 'attachment; filename=' + eventFileName);
+        res.setHeader('Content-type', mimetype);
+        res.sendFile(path.resolve(filePath));
+    }
+})
+}
+
+function deleteEventFiles(req,res){
+    const {eventFileName}=req.params;
+    const filePath = `./uploads/event/${eventFileName}`;
+    fs.unlink(filePath, err => {
+        if(err){
+            res.status(404).send({message:"Error al borrar el archivo"});
+        }else{
+            res.status(200).send({code:200,message:"OK"})
+        }
+    })
+}
+
+
 module.exports = {
     addAccident,
     getAccidents,
     updateAccident,
-    removeAccident
+    removeAccident,
+    uploadEventFiles,
+    getEventFiles,
+    deleteEventFiles
 }
+

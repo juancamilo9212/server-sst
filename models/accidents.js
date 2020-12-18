@@ -25,8 +25,12 @@ const AccidentSchema = Schema({
     actionPlan:String,
     actionExecutionDate:Date,
     state:Boolean,
-    images:[String],
-    actionPlanImages:[String],
+    images:[{
+        type: String
+    }],
+    actionPlanImages:[{
+        type: String
+    }],
     user:[{
         type: Schema.Types.ObjectId,
             ref: 'User'
