@@ -114,9 +114,6 @@ await Accident.findByIdAndRemove(accidentId, (err,accidentRemoved) =>{
         }
     }
 })
-
-
-
 }
 
 function uploadEventFiles(req,res){

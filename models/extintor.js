@@ -8,6 +8,7 @@ const ExtintorSchema = Schema({
     kindOfAgent:String,
     company:String,
     location:String,
+    needReload:Boolean,
     user:[{
         type: Schema.Types.ObjectId,
             ref: 'User'
