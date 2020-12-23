@@ -9,6 +9,12 @@ const ExtintorSchema = Schema({
     company:String,
     location:String,
     needReload:Boolean,
+    inspections:[
+        {
+            inspectionDate:Date,
+            inspectionComments:String
+        }
+    ],
     user:[{
         type: Schema.Types.ObjectId,
             ref: 'User'

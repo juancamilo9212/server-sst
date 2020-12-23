@@ -59,7 +59,7 @@ async function updateExtintor(req,res){
             }
         }
     }) 
-    }
+}
 
 async function removeExtintor(req,res){
     const extintorId=req.params;
@@ -96,7 +96,7 @@ async function removeExtintor(req,res){
                 }
             }
         })
-        }
+}
 
 module.exports ={
     addExtintor,
