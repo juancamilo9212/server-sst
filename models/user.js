@@ -16,7 +16,15 @@ const UserSchema=Schema({
     }],
     extintors:[{
         type: Schema.Types.ObjectId,
-            ref: 'Extintor'
+        ref: 'Extintor'
+    }],
+    kitsDerrame:[{
+        type: Schema.Types.ObjectId,
+        ref: 'KitsDerrame'
+    }],
+    botiquines:[{
+        type: Schema.Types.ObjectId,
+        ref: 'Botiquin'
     }]
 })
 

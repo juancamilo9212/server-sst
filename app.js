@@ -8,6 +8,8 @@ const userRoutes = require('./routes/user');
 const authRoutes = require('./routes/auth');
 const accidentRoutes=require('./routes/accidents');
 const extintorRoutes=require('./routes/extintor');
+const kitDerrameRoutes=require('./routes/kitDerrame');
+const botiquinRoutes=require('./routes/botiquin');
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
@@ -29,6 +31,8 @@ app.use(`/api/${API_VERSION}`,userRoutes);
 app.use(`/api/${API_VERSION}`,authRoutes);
 app.use(`/api/${API_VERSION}`,accidentRoutes);
 app.use(`/api/${API_VERSION}`,extintorRoutes);
+app.use(`/api/${API_VERSION}`,kitDerrameRoutes);
+app.use(`/api/${API_VERSION}`,botiquinRoutes);
 
 
 

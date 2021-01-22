@@ -1,27 +1,13 @@
 const Extintor= require('../models/extintor');
 const User=require('../models/user');
+const resourceLib=require('../lib/resources/index');
 
 async function addExtintor(req,res){
     const extintor = new Extintor(req.body);
     const user= await User.findOne({_id:req.params});
     extintor.user = user;
-    try {
-        await extintor.save();
-    } catch (error) {
-        res.status(500).send(error);
-    }
-    user.extintors.push(extintor);
-    await user.save((err,userStored) => {
-        if(err){
-            res.status(500).send("Error del servidor");
-        }else{
-            if(!userStored){
-                res.status(404).send("El usuario no ha sido encontrado");
-            }else{
-                res.status(200).send(extintor);
-            }
-        }
-    });
+    let {extintors} = user;
+    resourceLib.addResource(user,extintor,extintors,res);
 }
 
 async function getExtintors(req,res){
@@ -34,14 +20,14 @@ async function getExtintors(req,res){
             if(!userStored){
                 res.status(404).send({message:"Usuario no encontrado"})
             }else{
+                const {extintors} = userStored;
                 res.status(200).send({
                     code:200,
-                    extintors:userStored.extintors
+                    extintors:extintors
                 })
             }
         }
     })
-
 }
 
 async function updateExtintor(req,res){
@@ -55,10 +41,11 @@ async function updateExtintor(req,res){
                 res.status(404).send("El accidente no ha sido encontrado");
             }else{
                 res.status(200)
-                .send({code:200,accident:updatedExtintor});
+                .send({code:200,extintor:updatedExtintor});
             }
         }
-    }) 
+    })
+
 }
 
 async function removeExtintor(req,res){

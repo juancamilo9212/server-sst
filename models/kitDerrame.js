@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
 const Schema=mongoose.Schema;
 
-const ExtintorSchema = Schema({
+const KitDerrameSchema = Schema({
     serialNumber: String,
-    loadDate:Date,
-    nextLoadDate:Date,
-    kindOfAgent:String,
     company:String,
     location:String,
-    needReload:Boolean,
+    components:[
+        {
+            component:String,
+            expirationDate:Date
+        }
+    ],
     inspections:[
         {
             inspectionDate:Date,
@@ -21,4 +23,4 @@ const ExtintorSchema = Schema({
     }]
 })
 
-module.exports = mongoose.model("Extintor",ExtintorSchema);
+module.exports = mongoose.model("KitsDerrame",KitDerrameSchema);
