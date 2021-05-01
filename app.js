@@ -10,6 +10,7 @@ const accidentRoutes=require('./routes/accidents');
 const extintorRoutes=require('./routes/extintor');
 const kitDerrameRoutes=require('./routes/kitDerrame');
 const botiquinRoutes=require('./routes/botiquin');
+const camillaRoutes=require('./routes/camilla');
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
@@ -33,6 +34,7 @@ app.use(`/api/${API_VERSION}`,accidentRoutes);
 app.use(`/api/${API_VERSION}`,extintorRoutes);
 app.use(`/api/${API_VERSION}`,kitDerrameRoutes);
 app.use(`/api/${API_VERSION}`,botiquinRoutes);
+app.use(`/api/${API_VERSION}`,camillaRoutes);
 
 
 

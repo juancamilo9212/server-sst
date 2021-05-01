@@ -10,29 +10,50 @@ async function addAccident(req,res){
 
 const accident = new Accident(req.body);
 const user= await User.findOne({_id:req.params});
+let accidentSaved=false;
 accident.user=user;
+let errorMsg="";
 try {
     await accident.save();
+    accidentSaved=true;
 } catch (error) {
-    res.status(500).send(error);
+    errorMsg = error.message;
 }
+if(accidentSaved) {
 user.accidents.push(accident);
-await user.save((err,userStored) => {
-    if(err){
-        res.status(500).send("Error del servidor");
-    }else{
-        if(!userStored){
-            res.status(404).send("El usuario no ha sido encontrado");
-        }else{
-            res.status(200).send(accident);
-        }
-    }
-});
+res.status(200).send(accident);
+user.save();
+} else {
+res.status(500).send(errorMsg);
 }
+}
+
+/*async function addAccident(req,res){
+
+    const accident = new Accident(req.body);
+    const user= await User.findOne({_id:req.params});
+    accident.user=user;
+    try {
+        await accident.save();
+    } catch (error) {
+        res.status(500).send(error);
+    }
+    user.accidents.push(accident);
+    await user.save((err,userStored) => {
+        if(err){
+            res.status(500).send("Error del servidor");
+        }else{
+            if(!userStored){
+                res.status(404).send("El usuario no ha sido encontrado");
+            }else{
+                res.status(200).send(accident);
+            }
+        }
+    });
+    }*/
 
 async function getAccidents(req,res){
     const {filter,value} = req.query;
-    
     await User.findOne({_id:req.params})
     .populate('accidents').exec((err,userStored) => {
         if(err){
@@ -43,8 +64,8 @@ async function getAccidents(req,res){
             }else{
                 if(!filter && !value){
                     res.status(200).send({
-                        count:userStored.accidents.length,
-                        accidents:userStored.accidents});
+                    count:userStored.accidents.length,
+                    accidents:userStored.accidents});
                 }else{
                     const {accidents}=userStored;
                     let accidentsFiltered=
@@ -56,27 +77,17 @@ async function getAccidents(req,res){
             }
         }
     });
-    
-    
-
-
 }
 
 async function updateAccident(req,res){
 const id = req.params;
 const updateData=req.body;
-await Accident.findByIdAndUpdate(id,updateData,(err,updatedAccident) => {
-    if(err){
-        res.status(500).send("Error del servidor");
-    }else{
-        if(!updatedAccident){
-            res.status(404).send("El accidente no ha sido encontrado");
-        }else{
-            res.status(200)
-            .send({code:200,accident:updatedAccident});
-        }
-    }
-}) 
+try {
+const updatedAccident = await Accident.findOneAndUpdate(id,updateData,{runValidators:true});
+res.status(200).send({code:200,accident:updatedAccident});  
+} catch (error) {
+res.status(500).send({message:error})
+}
 }
 
 async function removeAccident(req,res){
@@ -117,9 +128,12 @@ await Accident.findByIdAndRemove(accidentId, (err,accidentRemoved) =>{
 }
 
 function uploadEventFiles(req,res){
+    
     try {
     const {eventFiles} = req.files;
-    const eventArray=eventFiles?accidentLib.getFilesName(eventFiles):[];
+    const eventArray=eventFiles ? 
+    accidentLib.getFilesName(eventFiles)
+    :[];
     res.status(200).send({code:200,images:eventArray});
     } catch (error) {
         res.status(500)
@@ -155,6 +169,25 @@ function deleteEventFiles(req,res){
     })
 }
 
+async function getAccidentReport(req,res){
+    const accidentId = req.params;
+    let accident;
+    try {
+    accident = await Accident.findById(accidentId);
+    if(!accident){
+        res.status(404).send({message:"No se ha encontrado el accidente"});
+    }else{
+        const template = accidentLib.accidentTemplate(accident);
+        accidentLib.generateReport(template).then(pdf => {
+            res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length })
+            res.status(200).send(pdf);
+        });
+        }   
+    } catch (error) {
+    res.status(500).send({message:"Error del servidor"});
+    }
+}
+
 
 module.exports = {
     addAccident,
@@ -163,6 +196,7 @@ module.exports = {
     removeAccident,
     uploadEventFiles,
     getEventFiles,
-    deleteEventFiles
+    deleteEventFiles,
+    getAccidentReport
 }
 

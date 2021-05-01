@@ -25,6 +25,10 @@ const UserSchema=Schema({
     botiquines:[{
         type: Schema.Types.ObjectId,
         ref: 'Botiquin'
+    }],
+    camillas:[{
+        type: Schema.Types.ObjectId,
+        ref: 'Camilla'
     }]
 })
 
