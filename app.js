@@ -12,6 +12,16 @@ const kitDerrameRoutes=require('./routes/kitDerrame');
 const botiquinRoutes=require('./routes/botiquin');
 const camillaRoutes=require('./routes/camilla');
 
+//Swagger
+const swaggerUi = require('swagger-ui-express'),
+swaggerDocument = require('./swagger.json');
+
+app.use(
+  '/api-docs',
+  swaggerUi.serve, 
+  swaggerUi.setup(swaggerDocument)
+);
+
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 

@@ -1,0 +1,38 @@
+{
+    "swagger":"2.0",
+    "info":{
+        "version":"1.0.0",
+        "title":"SSTECH API",
+        "description":"SSTECH es una aplicación para el manejo del sistema de gestión para el área de salud y seguridad en el trabajo"
+    },
+    "host":"localhost:3977/api/v1",
+    "basePath":"/",
+    "schemes":["http"],
+    "consumes":["application/json"],
+    "produces":["application/json"],
+    "paths":{
+        "/sign-up":{
+            "post":{
+                "summary":"Endpoint para la creación de nuevos usuarios ",
+                "parameters":[
+                    
+                ],
+                "responses":{
+                    "200":{
+                        "description":"OK"
+                    },
+                    "404":{
+                        "description":"Las contraseñas son obligatorias"
+                    },
+                    "500":{
+                        "description":"El usuario ya existe"
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+    
+

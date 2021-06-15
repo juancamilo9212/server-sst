@@ -11,11 +11,11 @@ user.name=name;
 user.lastName=lastName;
 user.active=true;
 
-if(!password || !repeatPassword){
-    res.status(404).send({message: "Las contraseñas son obligatorias"})
+if(!name || !lastName || !email || !password || !repeatPassword){
+    res.status(400).send({message: "Todos los campos son obligatorios"})
 }else{
 if(password !== repeatPassword){
-    res.status(404).send({message: "Las contraseñas deben ser iguales"})
+    res.status(400).send({message: "Las contraseñas deben ser iguales"})
 }else{
     bcrypt.hash(password,null,null,function(err,hash) {
         if(err){

@@ -18,7 +18,8 @@
     "mongoose": "^5.10.9",
     "nodemon": "^2.0.6",
     "puppeteer": "^7.1.0",
-    "stream": "^0.0.2"
+    "stream": "^0.0.2",
+    "swagger-ui-express": "^4.1.6"
   },
   "scripts": {
     "start": "nodemon index.js"
